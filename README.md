@@ -387,3 +387,99 @@ Java Process Exited
 ↓
 Container Exited
 
+
+Container Lifecycle (States)
+A container has a lifecycle.
+
+The simplest view is:
+Created
+   │
+   ▼
+Running
+   │
+   ▼
+Exited
+
+Created
+
+Docker has created the container.
+The filesystem exists.
+Networking is prepared.
+But the application hasn't started yet.
+Think of it as:
+House built
+Nobody living inside yet
+
+Running
+
+Docker starts the main process.
+For Spring Boot:
+PID 1
+↓
+java -jar app.jar
+
+Now the container is alive.
+docker ps
+shows:
+STATUS
+Up 5 minutes
+
+Exited
+
+The main process finishes.
+For example:
+
+java -jar app.jar
+↓
+Database connection failed
+↓
+JVM exits
+↓
+Container exits
+
+or
+
+hello-world
+↓
+Print message
+↓
+
+Exit
+
+Now:
+docker ps
+shows nothing.
+
+But:
+docker ps -a
+shows:
+Exited (1)
+
+Lifecycle with Commands
+               Docker Image
+                     │
+                     ▼
+             docker create (docker create nginx)
+                     │
+                     ▼
+                Created
+                     │
+          docker start / docker run (docker start <container>)
+                     │
+                     ▼
+                 Running
+                     │
+     PID 1 exits OR docker stop (docker stop <container>)
+                     │
+                     ▼
+                  Exited
+                     │
+              docker start
+                     │
+                     ▼
+                 Running
+                     │
+               docker rm
+                     │
+                     ▼
+                 Deleted
