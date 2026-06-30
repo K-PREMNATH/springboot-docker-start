@@ -99,3 +99,96 @@ Image vs Container
 | Read-only                  | Read/write while running   |
 | Can create many containers | Created from one image     |
 | Stored on disk             | Runs in memory and on disk |
+
+Example:
+Image
+springboot:v1
+
+        │
+        ├─────────────┐
+        │             │
+        ▼             ▼
+
+Container A     Container B
+One image can create multiple containers.
+
+
+
+| Command | What it shows |
+|---------|---------------|
+| **`docker version`** | Client and server (daemon) version numbers, API versions, Go version, build dates, and OS/Arch details |
+| **`docker info`** | System-wide Docker stats: total containers (running/paused/stopped), images count, storage driver, cgroup driver, kernel version, OS, memory/CPU resources, registry settings |
+| **`docker images`** | All locally stored Docker images with their repository name, tag, image ID, creation date, and size |
+| **`docker ps`** | **Only running** containers with container ID, image used, running command, creation time, status (Up), port mappings, and container name |
+| **`docker ps -a`** | **All containers** (running, stopped, exited, created, paused) — same columns as `docker ps` but includes containers in any state |
+
+---
+
+### Summary of key distinctions
+
+- **`docker ps`** = active containers only
+- **`docker ps -a`** = all containers (active + inactive)
+- **`docker images`** = image files (not containers)
+- **`docker version`** = software version info
+- **`docker info`** = system resources + configuration
+
+docker run hello-world
+Docker creates a new container.
+
+For example:
+docker run hello-world
+docker run hello-world
+docker run hello-world
+
+docker ps -a
+You might see something like:
+
+CONTAINER ID   IMAGE         COMMAND    STATUS
+a1b2c3d4e5f6   hello-world   ...        Exited
+b2c3d4e5f6g7   hello-world   ...        Exited
+c3d4e5f6g7h8   hello-world   ...        Exited
+
+Notice:
+
+All three containers use the same image (hello-world).
+Each has a different Container ID and a different name.
+Each is a separate container.
+
+Image
+   │
+   ├── docker run
+   ▼
+Container 1
+
+Image
+   │
+   ├── docker run
+   ▼
+Container 2
+
+Image
+   │
+   ├── docker run
+   ▼
+Container 3
+
+What actually happens when you run docker run?
+
+Internally, Docker performs these steps:
+
+docker run hello-world
+Checks whether the hello-world image exists locally.
+If it doesn't, downloads it from Docker Hub.
+Creates a new container from that image.
+Starts the container.
+Runs the command inside it.
+The command finishes.
+The container stops (status becomes Exited).
+
+The container is not deleted automatically—it remains on your machine unless you remove it.
+
+How can I avoid creating lots of stopped containers?
+If you don't need to keep them, use:
+docker run --rm hello-world
+
+An image is a template, and every docker run creates a new container from that template.
