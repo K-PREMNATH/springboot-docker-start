@@ -192,3 +192,135 @@ If you don't need to keep them, use:
 docker run --rm hello-world
 
 An image is a template, and every docker run creates a new container from that template.
+
+Lesson 2 – Docker Architecture
+Before learning more commands, you should understand how Docker works internally.
+docker run nginx
+But what actually happens behind the scenes?
+
+Let's break it down.
+                You
+                 │
+                 │ docker run nginx
+                 ▼
+        +------------------+
+        | Docker CLI       |
+        +------------------+
+                 │
+                 │ Request
+                 ▼
+        +------------------+
+        | Docker Engine    |
+        +------------------+
+           │          │
+           │          │
+     Images Store   Containers
+
+There are three important components:
+
+Docker CLI
+Docker Engine
+Docker Hub
+1. Docker CLI
+        CLI means Command Line Interface.
+        Whenever you type:
+        docker images or docker ps
+        you're talking to the Docker CLI.
+        Think of it as the remote control.
+        The remote control doesn't play the movie.
+        It only sends commands.
+
+2. Docker Engine
+        This is the brain.
+        Docker Engine actually does the work.
+        It can
+        Build images
+        Create containers
+        Stop containers
+        Remove containers
+        Create networks
+        Create volumes
+        
+        When you execute
+        docker run hello-world
+        the CLI simply says
+        "Docker Engine, please start a container."
+        The Engine does everything.
+3. Docker Hub
+        Docker Hub is like GitHub...
+        But instead of storing source code...
+        It stores Docker Images.
+        
+        Example:
+        Docker Hub
+        
+        ├── nginx
+        ├── mysql
+        ├── redis
+        ├── postgres
+        ├── mongo
+        ├── eclipse-temurin
+        └── hello-world
+        
+        When you ran
+        docker run hello-world
+        Did you ever download hello-world manually?
+        No.
+        Docker automatically did this:
+        
+        Docker Hub
+        ↓
+        Download Image
+        ↓
+        Local Machine
+        ↓
+        Create Container
+        
+        Let's verify this
+        Run
+        docker images
+        You should see
+        REPOSITORY     TAG      IMAGE ID
+        hello-world    latest   xxxxxxxxx
+        Question:
+        Did you build this image?
+        No.
+        Docker downloaded it from Docker Hub.
+
+        What happens the second time?
+        docker run hello-world
+        again.
+
+        Does Docker download it again?
+        No.
+        Why?
+        Because the image already exists locally.
+        Docker simply creates another container.
+        Flow:
+   First Time
+
+        docker run hello-world
+        ↓
+        Image not found
+        ↓
+        Download
+        ↓
+        Create Container
+        ↓
+        Run
+
+Second time
+        docker run hello-world
+        ↓
+        Image already exists
+        ↓
+        Create Container
+        ↓
+        Run
+
+Docker Image Cache
+Docker stores images locally.
+Run:
+docker images
+You are looking at your local image cache.
+
