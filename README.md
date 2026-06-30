@@ -324,3 +324,66 @@ Run:
 docker images
 You are looking at your local image cache.
 
+Very Important Rule
+A Docker container runs as long as its main process (PID 1) is running.
+This is one of the most important concepts in Docker.
+
+| Application   | Main Process        | Container Status  |
+| ------------- | ------------------- | ----------------- |
+| `hello-world` | Print message       | Exits immediately |
+| Spring Boot   | `java -jar app.jar` | Running           |
+| Nginx         | `nginx`             | Running           |
+| SQL Server    | `sqlservr`          | Running           |
+| Redis         | `redis-server`      | Running           |
+
+Suppose you execute:
+docker run my-springboot-app
+and immediately afterward:
+docker ps
+returns no running containers.
+What are the first three Docker commands you would run to investigate why the application didn't stay running?
+
+This is the real workflow used by developers
+
+docker run my-app
+        │
+        ▼
+Container exited
+        │
+        ▼
+docker ps -a
+        │
+        ▼
+Find Container ID
+        │
+        ▼
+docker logs <container-id>
+        │
+        ▼
+Read Error
+        │
+        ▼
+Fix Application
+        │
+        ▼
+Build Image Again
+        │
+        ▼
+Run Again
+
+important
+Many beginners think:
+"Docker crashed."
+Most of the time, Docker is perfectly fine.
+It's actually the application inside the container that exited.
+
+Docker Engine ✅ Healthy
+
+Container ✅ Started
+↓
+Spring Boot ❌ Failed to connect to SQL Server
+↓
+Java Process Exited
+↓
+Container Exited
+
