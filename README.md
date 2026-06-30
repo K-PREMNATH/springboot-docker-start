@@ -483,3 +483,49 @@ Lifecycle with Commands
                      │
                      ▼
                  Deleted
+
+
+Container Port vs Host Port
+This is one of the biggest sources of confusion.
+
+Suppose your Spring Boot app listens on:
+application.properties
+server.port=8080
+
+Inside the container:
+Spring Boot
+↓
+Listening on 8080
+Nobody outside the container can access it yet.
+
+Port Mapping
+Now run:
+docker run -p 8080:8080 my-app
+
+Now run:
+docker run -p 8080:8080 my-app
+I want you to understand it.
+The syntax is:
+HOST_PORT : CONTAINER_PORT
+So -p 8080:8080
+
+Laptop
+
+localhost:8080
+      │
+      ▼
+Container
+8080
+
+Your browser connects to your host, and Docker forwards the traffic into the container.
+
+Another example
+docker run -p 9090:8080 my-app
+
+Browser
+localhost:9090
+      │
+      ▼
+Container
+8080
+
